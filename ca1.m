@@ -27,7 +27,8 @@ whos x
 % Hint: you need to know how to use ":" operator (1 point)
 %x1=<only keep odd-indexed rows and columns of x so you will obtain 
 %an image whose size is half of that of x>;
-x1=x(1:2:end-1,1:2:end-1); %changed
+x1=x(1:2:end,1:2:end); %changed
+imshow(x,[]);
 imshow(x1,[]);
 % increase the spatial image resolution by a factor of two (also-called up-sampling)
 % Hint: use >help imresize or >help interp2 to learn how to use these two
@@ -35,9 +36,8 @@ imshow(x1,[]);
 x2=imresize(x1,2); %changed
 subplot(1,2,1);imshow(x,[]);title('original image');
 subplot(1,2,2);imshow(x2,[]);title('interpolated image');
-%{report what kind of visual quality degradation you observe when comparing
-%    x2 with the original x.}
-%degredation
+% The original image is a lot clearer. The second image is more pixelated,
+% but you can't tell when it's of a smaller size.
 
 % 2. reduce the bit-depth image resolution of x from 256 to 16 
 % Hint: you can google ``uniform quantization'' to learn more 
@@ -46,25 +46,23 @@ Q=16;
 x3=round(x/Q);
 subplot(1,2,1);imshow(x,[]);title('8-bit image');
 subplot(1,2,2);imshow(x3,[]);title('4-bit image');
-%{report what kind of visual quality degradation you observe when comparing
-%    x3 with the original x.}
-%degradation in x3 vs x
+%The foreground looks the same, but the background is a lot hazier
 
 
-% 3. extract the MSB and LSB of a given image (1 point)
+% 3. extract the MSB and LSB of a given image (1 point) maybe error
 % Hint: you can google ``matlab bitget'' or type ">help bitget" to learn%
 % how to use this tool properly
+x=double(imread('cameraman.tif'));
 MSB=bitget(x,64);
 LSB=bitget(x,1);
 subplot(1,2,1);imshow(MSB,[]);title('Most Significant Bitplane (MSB)');
 subplot(1,2,2);imshow(LSB,[]);title('Least Significant Bitplane (MSB)');
-%{report what kind of visual difference between MSB and LSB you can observe.}
-%difference
-
+%MSB is full black, while LSB is white and black.
 
 % 4. play with a color image of flowers (1 point)
 % read in the test image 
 x=double(imread('fl_orig.ppm'));
+img = imread('fl_orig.ppm');
 y=rgb2gray(x/255);
 % generate Bayer pattern z
 % green channels: quincinx lattice
@@ -88,12 +86,12 @@ imshow([y*255 z],[]);
 % only supports the class of image format with unsigned integers.
 xx=cfa_interp(z);
 %<display original and reconstructed color images side-by-side>
-imshow([xx,x]);
-%imshow(x);
+subplot(1,2,1);imshow(img,[]);title('original image');
+subplot(1,2,2);imshow(xx,[]);title('reconstructed image');
 % This problem is often called image demosaicing. You can learn more about 
 % more advanced demosaicing methods at wiki: https://en.wikipedia.org/wiki/Demosaicing 
 
-% 5. MRI image acquisition in k-space (1 point)
+% 5. MRI image acquisition in k-space (1 point) probable error
 clear all
 close all
 %load spiralexampledata
@@ -125,6 +123,7 @@ x1=imread('illusion.png');
 imshow(x1,[]);
 %{Find out the intensity values at blocks A and 
 %    Verfiy they are indeed the same number despite visually apparent difference}
+% A and B both have R:120 G:120 and B:120 values
 
 
 % 2. which one is longer? (1 point)
@@ -132,16 +131,18 @@ x2=imread('arrows.png');
 imshow(x2,[]);
 %{Find out the approximate lengths of two arrows 
 %    and verify theu are indeed the same despite that visually the bottom one appears longer}
+%Both are approx 192 units long
 
 % 3. which one is larger? (1 points)
 x3=imread('SC_shape.png');
 imshow(x3,[]);
 %{Find out the diameters of two disks at the center
 %    and verify they are indeed the same despite that visually the left one appears larger}
+%Both center circles are approx 71 units long
 
 % 4. red or orange? (1 point)
 % two pixels with identical R,G,B values might look like two totally different colors
-x4=imread('scstrpe1.ppm');
+x4=imread('scstrpe1.ppm');      %does not exist
 imtool(x4);
 %{Use the interactive tool supplied by imtool to find out the (R,G,B) 
 %    values associated with two center blocks respectively}
@@ -150,6 +151,9 @@ imtool(x4);
 x5=imread('parallel.png');
 %{Find out whether the long lines along the NW direction are parallel to each other
 %    by measuring their orientations - just pick any two lines and show your calculation.}
+%  Taking the third and 5th lines from the left, drawing two lines through
+%  the horizontal lines along the lines in question, reveal that they are in fact parallel.
+% I exported the proof image, but do not know where it is stored.
 
 % Summary: seeing is not believing. The neuroscience behind visual
 % perception has remained largely a big mystery.
