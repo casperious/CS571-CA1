@@ -27,17 +27,18 @@ whos x
 % Hint: you need to know how to use ":" operator (1 point)
 %x1=<only keep odd-indexed rows and columns of x so you will obtain 
 %an image whose size is half of that of x>;
-x1=x(1:2:end,1:2:end); %changed
+x1=x(1:2:end,1:2:end); %extract odd rows and columns
 imshow(x,[]);
 imshow(x1,[]);
 % increase the spatial image resolution by a factor of two (also-called up-sampling)
 % Hint: use >help imresize or >help interp2 to learn how to use these two
 % functions assoicated with linear interpolation 
-x2=imresize(x1,2); %changed
+x2=imresize(x1,2); %resize
 subplot(1,2,1);imshow(x,[]);title('original image');
 subplot(1,2,2);imshow(x2,[]);title('interpolated image');
-% The original image is a lot clearer. The second image is more pixelated,
-% but you can't tell when it's of a smaller size.
+%{report what kind of visual quality degradation you observe when comparing
+%    x2 with the original x.}
+% The original image is a lot clearer. The second image is more pixelated
 
 % 2. reduce the bit-depth image resolution of x from 256 to 16 
 % Hint: you can google ``uniform quantization'' to learn more 
@@ -46,18 +47,21 @@ Q=16;
 x3=round(x/Q);
 subplot(1,2,1);imshow(x,[]);title('8-bit image');
 subplot(1,2,2);imshow(x3,[]);title('4-bit image');
-%The foreground looks the same, but the background is a lot hazier
+%{report what kind of visual quality degradation you observe when comparing
+%    x3 with the original x.}
+% The foreground looks the same, but the background is a lot hazier
 
 
-% 3. extract the MSB and LSB of a given image (1 point) maybe error
+% 3. extract the MSB and LSB of a given image (1 point)
 % Hint: you can google ``matlab bitget'' or type ">help bitget" to learn%
 % how to use this tool properly
 x=double(imread('cameraman.tif'));
-MSB=bitget(x,64);
+MSB=bitget(x,8);
 LSB=bitget(x,1);
 subplot(1,2,1);imshow(MSB,[]);title('Most Significant Bitplane (MSB)');
 subplot(1,2,2);imshow(LSB,[]);title('Least Significant Bitplane (MSB)');
-%MSB is full black, while LSB is white and black.
+%{report what kind of visual difference between MSB and LSB you can observe.}
+% MSB is a white and black representation of the image, while LSB is a mosaic of white and black.
 
 % 4. play with a color image of flowers (1 point)
 % read in the test image 
@@ -106,13 +110,14 @@ k = S.k;
 % choose an image size
 n=256/2;
 % read the supplied grid2w.m function and learn how to call it
-X=grid2w(d,w,k,n);
-x=ifft(X);
+X=grid2w(d,k,w,n);
+x=abs(fftshift(ifft2(X)));
 % display the reconstructed result
 % Hint: if the displayed result does not appear correct, >help fftshift
 % and understand why you need to use fftshift here (we will discuss this
 % issue later during the lecture on FT of images)
 figure(1);imshow(abs(x),[]);
+% Is the scan of a stop watch?
 
 % Part II: Image perception experiments (5 points)
 % The objective of this assignment is to play with digital images
@@ -131,24 +136,26 @@ x2=imread('arrows.png');
 imshow(x2,[]);
 %{Find out the approximate lengths of two arrows 
 %    and verify theu are indeed the same despite that visually the bottom one appears longer}
-%Both are approx 192 units long
+% Both are approx 192 units long
 
 % 3. which one is larger? (1 points)
 x3=imread('SC_shape.png');
 imshow(x3,[]);
 %{Find out the diameters of two disks at the center
 %    and verify they are indeed the same despite that visually the left one appears larger}
-%Both center circles are approx 71 units long
+% Both center circles are approx 71 units long
 
 % 4. red or orange? (1 point)
 % two pixels with identical R,G,B values might look like two totally different colors
-x4=imread('scstrpe1.ppm');      %does not exist
+x4=imread('scstrpe1.ppm');      
 imtool(x4);
 %{Use the interactive tool supplied by imtool to find out the (R,G,B) 
 %    values associated with two center blocks respectively}
+%  Left value is 255,0,0 and right value is 255,0,0
 
 % 5. parallel or not? (1 point)
 x5=imread('parallel.png');
+imshow(x5);
 %{Find out whether the long lines along the NW direction are parallel to each other
 %    by measuring their orientations - just pick any two lines and show your calculation.}
 %  Taking the third and 5th lines from the left, drawing two lines through
